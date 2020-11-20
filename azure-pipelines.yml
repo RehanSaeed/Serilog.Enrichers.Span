@@ -88,6 +88,6 @@ stages:
             displayName: 'NuGet Install'
           - task: NuGetAuthenticate@0
             displayName: 'NuGet Authenticate'
-          - pwsh: nuget push $(Agent.BuildDirectory)\Windows\*.nupkg -Source https://pkgs.dev.azure.com/serilog-exceptions/_packaging/serilog-enrichers-span/nuget/v3/index.json -ApiKey AzureArtifacts -SkipDuplicate
+          - pwsh: nuget push $(Agent.BuildDirectory)\Windows\*.nupkg -Source https://pkgs.dev.azure.com/serilog-exceptions/_packaging/serilog-exceptions/nuget/v3/index.json -ApiKey AzureArtifacts -SkipDuplicate
             displayName: 'NuGet Push'
             failOnStderr: true
