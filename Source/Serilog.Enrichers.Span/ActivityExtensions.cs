@@ -18,6 +18,7 @@ namespace Serilog.Enrichers.Span
             {
                 ActivityIdFormat.Hierarchical => activity.Id,
                 ActivityIdFormat.W3C => activity.SpanId.ToHexString(),
+                ActivityIdFormat.Unknown => null,
                 _ => null,
             };
 
@@ -35,6 +36,7 @@ namespace Serilog.Enrichers.Span
             {
                 ActivityIdFormat.Hierarchical => activity.RootId,
                 ActivityIdFormat.W3C => activity.TraceId.ToHexString(),
+                ActivityIdFormat.Unknown => null,
                 _ => null,
             };
 
@@ -52,6 +54,7 @@ namespace Serilog.Enrichers.Span
             {
                 ActivityIdFormat.Hierarchical => activity.ParentId,
                 ActivityIdFormat.W3C => activity.ParentSpanId.ToHexString(),
+                ActivityIdFormat.Unknown => null,
                 _ => null,
             };
 
