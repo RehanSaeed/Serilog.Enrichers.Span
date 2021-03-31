@@ -20,10 +20,46 @@ namespace Serilog.Enrichers.Span
 
             if (activity is not null)
             {
-                logEvent.AddPropertyIfAbsent(new LogEventProperty("SpanId", new ScalarValue(activity.GetSpanId())));
-                logEvent.AddPropertyIfAbsent(new LogEventProperty("TraceId", new ScalarValue(activity.GetTraceId())));
-                logEvent.AddPropertyIfAbsent(new LogEventProperty("ParentId", new ScalarValue(activity.GetParentId())));
+                AddSpanId(logEvent, activity);
+                AddTraceId(logEvent, activity);
+                AddParentId(logEvent, activity);
             }
+        }
+        
+        private static void AddSpanId(LogEvent logEvent, Activity activity)
+        {
+            var property = activity.GetCustomProperty("Serilog.SpanId");
+            if (property is null || property is not LogEventProperty logEventProperty)
+            {
+                logEventProperty = new LogEventProperty("SpanId", new ScalarValue(activity.GetSpanId()));
+                activity.SetCustomProperty("Serilog.SpanId", logEventProperty);
+            }
+
+            logEvent.AddPropertyIfAbsent(logEventProperty);
+        }
+
+        private static void AddTraceId(LogEvent logEvent, Activity activity)
+        {
+            var property = activity.GetCustomProperty("Serilog.TraceId");
+            if (property is null || property is not LogEventProperty logEventProperty)
+            {
+                logEventProperty = new LogEventProperty("TraceId", new ScalarValue(activity.GetTraceId()));
+                activity.SetCustomProperty("Serilog.TraceId", logEventProperty);
+            }
+
+            logEvent.AddPropertyIfAbsent(logEventProperty);
+        }
+
+        private static void AddParentId(LogEvent logEvent, Activity activity)
+        {
+            var property = activity.GetCustomProperty("Serilog.ParentId");
+            if (property is null || property is not LogEventProperty logEventProperty)
+            {
+                logEventProperty = new LogEventProperty("ParentId", new ScalarValue(activity.GetParentId()));
+                activity.SetCustomProperty("Serilog.ParentId", logEventProperty);
+            }
+
+            logEvent.AddPropertyIfAbsent(logEventProperty);
         }
     }
 }
