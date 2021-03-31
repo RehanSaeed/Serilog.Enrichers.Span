@@ -9,6 +9,7 @@ namespace Serilog.Enrichers.Span
     /// </summary>
     public class ActivityEnricher : ILogEventEnricher
     {
+#if NET5_0
         /// <summary>
         /// Enrich the log event.
         /// </summary>
@@ -25,7 +26,7 @@ namespace Serilog.Enrichers.Span
                 AddParentId(logEvent, activity);
             }
         }
-        
+
         private static void AddSpanId(LogEvent logEvent, Activity activity)
         {
             var property = activity.GetCustomProperty("Serilog.SpanId");
@@ -61,5 +62,23 @@ namespace Serilog.Enrichers.Span
 
             logEvent.AddPropertyIfAbsent(logEventProperty);
         }
+#elif NETCOREAPP3_0 || NETCOREAPP3_1
+        /// <summary>
+        /// Enrich the log event.
+        /// </summary>
+        /// <param name="logEvent">The log event to enrich.</param>
+        /// <param name="propertyFactory">Factory for creating new properties to add to the event.</param>
+        public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
+        {
+            var activity = Activity.Current;
+
+            if (activity is not null)
+            {
+                logEvent.AddPropertyIfAbsent(new LogEventProperty("SpanId", new ScalarValue(activity.GetSpanId())));
+                logEvent.AddPropertyIfAbsent(new LogEventProperty("TraceId", new ScalarValue(activity.GetTraceId())));
+                logEvent.AddPropertyIfAbsent(new LogEventProperty("ParentId", new ScalarValue(activity.GetParentId())));
+            }
+        }
+#endif
     }
 }
