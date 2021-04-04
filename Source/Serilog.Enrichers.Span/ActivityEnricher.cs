@@ -9,7 +9,16 @@ namespace Serilog.Enrichers.Span
     /// </summary>
     public class ActivityEnricher : ILogEventEnricher
     {
-#if NET5_0
+        private const string SpanId = "SpanId";
+        private const string TraceId = "TraceId";
+        private const string ParentId = "ParentId";
+
+#if NET5_0_OR_GREATER
+
+        private const string SpanIdKey = "Serilog.SpanId";
+        private const string TraceIdKey = "Serilog.TraceId";
+        private const string ParentIdKey = "Serilog.ParentId";
+
         /// <summary>
         /// Enrich the log event.
         /// </summary>
@@ -29,11 +38,11 @@ namespace Serilog.Enrichers.Span
 
         private static void AddSpanId(LogEvent logEvent, Activity activity)
         {
-            var property = activity.GetCustomProperty("Serilog.SpanId");
+            var property = activity.GetCustomProperty(SpanIdKey);
             if (property is null || property is not LogEventProperty logEventProperty)
             {
-                logEventProperty = new LogEventProperty("SpanId", new ScalarValue(activity.GetSpanId()));
-                activity.SetCustomProperty("Serilog.SpanId", logEventProperty);
+                logEventProperty = new LogEventProperty(SpanId, new ScalarValue(activity.GetSpanId()));
+                activity.SetCustomProperty(SpanIdKey, logEventProperty);
             }
 
             logEvent.AddPropertyIfAbsent(logEventProperty);
@@ -41,11 +50,11 @@ namespace Serilog.Enrichers.Span
 
         private static void AddTraceId(LogEvent logEvent, Activity activity)
         {
-            var property = activity.GetCustomProperty("Serilog.TraceId");
+            var property = activity.GetCustomProperty(TraceIdKey);
             if (property is null || property is not LogEventProperty logEventProperty)
             {
-                logEventProperty = new LogEventProperty("TraceId", new ScalarValue(activity.GetTraceId()));
-                activity.SetCustomProperty("Serilog.TraceId", logEventProperty);
+                logEventProperty = new LogEventProperty(TraceId, new ScalarValue(activity.GetTraceId()));
+                activity.SetCustomProperty(TraceIdKey, logEventProperty);
             }
 
             logEvent.AddPropertyIfAbsent(logEventProperty);
@@ -53,16 +62,17 @@ namespace Serilog.Enrichers.Span
 
         private static void AddParentId(LogEvent logEvent, Activity activity)
         {
-            var property = activity.GetCustomProperty("Serilog.ParentId");
+            var property = activity.GetCustomProperty(ParentIdKey);
             if (property is null || property is not LogEventProperty logEventProperty)
             {
-                logEventProperty = new LogEventProperty("ParentId", new ScalarValue(activity.GetParentId()));
-                activity.SetCustomProperty("Serilog.ParentId", logEventProperty);
+                logEventProperty = new LogEventProperty(ParentId, new ScalarValue(activity.GetParentId()));
+                activity.SetCustomProperty(ParentIdKey, logEventProperty);
             }
 
             logEvent.AddPropertyIfAbsent(logEventProperty);
         }
-#elif NETCOREAPP3_0 || NETCOREAPP3_1
+#else
+
         /// <summary>
         /// Enrich the log event.
         /// </summary>
@@ -74,9 +84,9 @@ namespace Serilog.Enrichers.Span
 
             if (activity is not null)
             {
-                logEvent.AddPropertyIfAbsent(new LogEventProperty("SpanId", new ScalarValue(activity.GetSpanId())));
-                logEvent.AddPropertyIfAbsent(new LogEventProperty("TraceId", new ScalarValue(activity.GetTraceId())));
-                logEvent.AddPropertyIfAbsent(new LogEventProperty("ParentId", new ScalarValue(activity.GetParentId())));
+                logEvent.AddPropertyIfAbsent(new LogEventProperty(SpanId, new ScalarValue(activity.GetSpanId())));
+                logEvent.AddPropertyIfAbsent(new LogEventProperty(TraceId, new ScalarValue(activity.GetTraceId())));
+                logEvent.AddPropertyIfAbsent(new LogEventProperty(ParentId, new ScalarValue(activity.GetParentId())));
             }
         }
 #endif
