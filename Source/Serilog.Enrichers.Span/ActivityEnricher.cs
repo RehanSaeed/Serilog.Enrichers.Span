@@ -12,12 +12,11 @@ namespace Serilog.Enrichers.Span
         private const string SpanId = "SpanId";
         private const string TraceId = "TraceId";
         private const string ParentId = "ParentId";
-
 #if NET5_0_OR_GREATER
-
         private const string SpanIdKey = "Serilog.SpanId";
         private const string TraceIdKey = "Serilog.TraceId";
         private const string ParentIdKey = "Serilog.ParentId";
+#endif
 
         /// <summary>
         /// Enrich the log event.
@@ -30,11 +29,18 @@ namespace Serilog.Enrichers.Span
 
             if (activity is not null)
             {
+#if NET5_0_OR_GREATER
                 AddSpanId(logEvent, activity);
                 AddTraceId(logEvent, activity);
                 AddParentId(logEvent, activity);
+#else
+                logEvent.AddPropertyIfAbsent(new LogEventProperty(SpanId, new ScalarValue(activity.GetSpanId())));
+                logEvent.AddPropertyIfAbsent(new LogEventProperty(TraceId, new ScalarValue(activity.GetTraceId())));
+                logEvent.AddPropertyIfAbsent(new LogEventProperty(ParentId, new ScalarValue(activity.GetParentId())));
+#endif
             }
         }
+#if NET5_0_OR_GREATER
 
         private static void AddSpanId(LogEvent logEvent, Activity activity)
         {
@@ -70,24 +76,6 @@ namespace Serilog.Enrichers.Span
             }
 
             logEvent.AddPropertyIfAbsent(logEventProperty);
-        }
-#else
-
-        /// <summary>
-        /// Enrich the log event.
-        /// </summary>
-        /// <param name="logEvent">The log event to enrich.</param>
-        /// <param name="propertyFactory">Factory for creating new properties to add to the event.</param>
-        public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
-        {
-            var activity = Activity.Current;
-
-            if (activity is not null)
-            {
-                logEvent.AddPropertyIfAbsent(new LogEventProperty(SpanId, new ScalarValue(activity.GetSpanId())));
-                logEvent.AddPropertyIfAbsent(new LogEventProperty(TraceId, new ScalarValue(activity.GetTraceId())));
-                logEvent.AddPropertyIfAbsent(new LogEventProperty(ParentId, new ScalarValue(activity.GetParentId())));
-            }
         }
 #endif
     }
