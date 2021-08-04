@@ -33,7 +33,6 @@ namespace Serilog.Enrichers.Span
                 AddSpanId(logEvent, activity);
                 AddTraceId(logEvent, activity);
                 AddParentId(logEvent, activity);
-                AddTags(logEvent, activity);
 #else
                 logEvent.AddPropertyIfAbsent(new LogEventProperty(SpanId, new ScalarValue(activity.GetSpanId())));
                 logEvent.AddPropertyIfAbsent(new LogEventProperty(TraceId, new ScalarValue(activity.GetTraceId())));
@@ -41,16 +40,7 @@ namespace Serilog.Enrichers.Span
 #endif
             }
         }
-
 #if NET5_0_OR_GREATER
-
-        private static void AddTags(LogEvent logEvent, Activity activity)
-        {
-            foreach (var item in activity.Tags)
-            {
-                logEvent.AddPropertyIfAbsent(new LogEventProperty(item.Key, new ScalarValue(item.Value)));
-            }
-        }
 
         private static void AddSpanId(LogEvent logEvent, Activity activity)
         {
@@ -87,7 +77,6 @@ namespace Serilog.Enrichers.Span
 
             logEvent.AddPropertyIfAbsent(logEventProperty);
         }
-
 #endif
     }
 }

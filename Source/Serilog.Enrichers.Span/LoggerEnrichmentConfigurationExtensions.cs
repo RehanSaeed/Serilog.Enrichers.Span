@@ -15,10 +15,29 @@ namespace Serilog.Enrichers.Span
         /// <param name="loggerEnrichmentConfiguration">The enrichment configuration.</param>
         /// <returns>Configuration object allowing method chaining.</returns>
         public static LoggerConfiguration WithSpan(this LoggerEnrichmentConfiguration loggerEnrichmentConfiguration)
+            => loggerEnrichmentConfiguration.WithSpan(new SpanOptions());
+
+        /// <summary>
+        /// Enrich logger output with span information from the current <see cref="Activity"/>.
+        /// </summary>
+        /// <param name="loggerEnrichmentConfiguration">The enrichment configuration.</param>
+        /// <param name="spanOptions"><see cref="SpanOptions"/> to use for enriching Activity.</param>
+        /// <returns>Configuration object allowing method chaining.</returns>
+        public static LoggerConfiguration WithSpan(this LoggerEnrichmentConfiguration loggerEnrichmentConfiguration, SpanOptions spanOptions)
         {
             if (loggerEnrichmentConfiguration is null)
             {
                 throw new ArgumentNullException(nameof(loggerEnrichmentConfiguration));
+            }
+
+            if (spanOptions is null)
+            {
+                throw new ArgumentNullException(nameof(spanOptions));
+            }
+
+            if (spanOptions.IncludeTags)
+            {
+                loggerEnrichmentConfiguration.With<ActivityTagEnricher>();
             }
 
             return loggerEnrichmentConfiguration.With<ActivityEnricher>();
