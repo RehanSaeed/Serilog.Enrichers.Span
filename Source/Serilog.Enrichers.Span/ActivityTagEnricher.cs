@@ -1,5 +1,6 @@
 namespace Serilog.Enrichers.Span
 {
+    using System;
     using System.Diagnostics;
     using System.Linq;
     using Serilog.Core;
@@ -19,6 +20,11 @@ namespace Serilog.Enrichers.Span
         /// <param name="propertyFactory">Factory for creating new properties to add to the event.</param>
         public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
         {
+            if (logEvent == null)
+            {
+                throw new ArgumentNullException(nameof(logEvent));
+            }
+
             var activity = Activity.Current;
 
             if (activity is not null)
