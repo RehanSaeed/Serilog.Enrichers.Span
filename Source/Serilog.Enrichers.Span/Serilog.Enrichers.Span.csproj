@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup Label="Build">
-    <TargetFrameworks>net5.0;netcoreapp3.1;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>net5.0;netcoreapp3.1;netcoreapp3.0;net472</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Label="Package">
@@ -12,6 +12,7 @@
 
   <ItemGroup Label="Package References">
     <PackageReference Include="Serilog" Version="2.8.0" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="5.0.1" Condition="'$(TargetFramework)' == 'net472'" />
   </ItemGroup>
 
 </Project>
