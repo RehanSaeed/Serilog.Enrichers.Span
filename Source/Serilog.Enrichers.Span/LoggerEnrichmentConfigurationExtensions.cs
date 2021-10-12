@@ -1,46 +1,45 @@
-namespace Serilog.Enrichers.Span
+namespace Serilog.Enrichers.Span;
+
+using System;
+using System.Diagnostics;
+using Serilog.Configuration;
+
+/// <summary>
+/// <see cref="LoggerEnrichmentConfiguration"/> extension methods.
+/// </summary>
+public static class LoggerEnrichmentConfigurationExtensions
 {
-    using System;
-    using System.Diagnostics;
-    using Serilog.Configuration;
+    /// <summary>
+    /// Enrich logger output with span information from the current <see cref="Activity"/>.
+    /// </summary>
+    /// <param name="loggerEnrichmentConfiguration">The enrichment configuration.</param>
+    /// <returns>Configuration object allowing method chaining.</returns>
+    public static LoggerConfiguration WithSpan(this LoggerEnrichmentConfiguration loggerEnrichmentConfiguration)
+        => loggerEnrichmentConfiguration.WithSpan(new SpanOptions());
 
     /// <summary>
-    /// <see cref="LoggerEnrichmentConfiguration"/> extension methods.
+    /// Enrich logger output with span information from the current <see cref="Activity"/>.
     /// </summary>
-    public static class LoggerEnrichmentConfigurationExtensions
+    /// <param name="loggerEnrichmentConfiguration">The enrichment configuration.</param>
+    /// <param name="spanOptions"><see cref="SpanOptions"/> to use for enriching Activity.</param>
+    /// <returns>Configuration object allowing method chaining.</returns>
+    public static LoggerConfiguration WithSpan(this LoggerEnrichmentConfiguration loggerEnrichmentConfiguration, SpanOptions spanOptions)
     {
-        /// <summary>
-        /// Enrich logger output with span information from the current <see cref="Activity"/>.
-        /// </summary>
-        /// <param name="loggerEnrichmentConfiguration">The enrichment configuration.</param>
-        /// <returns>Configuration object allowing method chaining.</returns>
-        public static LoggerConfiguration WithSpan(this LoggerEnrichmentConfiguration loggerEnrichmentConfiguration)
-            => loggerEnrichmentConfiguration.WithSpan(new SpanOptions());
-
-        /// <summary>
-        /// Enrich logger output with span information from the current <see cref="Activity"/>.
-        /// </summary>
-        /// <param name="loggerEnrichmentConfiguration">The enrichment configuration.</param>
-        /// <param name="spanOptions"><see cref="SpanOptions"/> to use for enriching Activity.</param>
-        /// <returns>Configuration object allowing method chaining.</returns>
-        public static LoggerConfiguration WithSpan(this LoggerEnrichmentConfiguration loggerEnrichmentConfiguration, SpanOptions spanOptions)
+        if (loggerEnrichmentConfiguration is null)
         {
-            if (loggerEnrichmentConfiguration is null)
-            {
-                throw new ArgumentNullException(nameof(loggerEnrichmentConfiguration));
-            }
-
-            if (spanOptions is null)
-            {
-                throw new ArgumentNullException(nameof(spanOptions));
-            }
-
-            if (spanOptions.IncludeTags)
-            {
-                loggerEnrichmentConfiguration.With<ActivityTagEnricher>();
-            }
-
-            return loggerEnrichmentConfiguration.With<ActivityEnricher>();
+            throw new ArgumentNullException(nameof(loggerEnrichmentConfiguration));
         }
+
+        if (spanOptions is null)
+        {
+            throw new ArgumentNullException(nameof(spanOptions));
+        }
+
+        if (spanOptions.IncludeTags)
+        {
+            loggerEnrichmentConfiguration.With<ActivityTagEnricher>();
+        }
+
+        return loggerEnrichmentConfiguration.With<ActivityEnricher>();
     }
 }
