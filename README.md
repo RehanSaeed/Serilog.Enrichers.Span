@@ -1,4 +1,4 @@
-![Banner](Images/Banner.png)
+![Banner](https://media.githubusercontent.com/media/RehanSaeed/Serilog.Enrichers.Span/main/Images/Banner.png)
 
 [![Serilog.Enrichers.Span NuGet Package](https://img.shields.io/nuget/v/Serilog.Enrichers.Span.svg)](https://www.nuget.org/packages/Serilog.Enrichers.Span/) [![Serilog.Enrichers.Span package in serilog-exceptions feed in Azure Artifacts](https://feeds.dev.azure.com/serilog-exceptions/_apis/public/Packaging/Feeds/8479813c-da6b-4677-b40d-78df8725dc9c/Packages/3f8a2a7e-8124-4987-9c44-916dba83b9d6/Badge)](https://dev.azure.com/serilog-exceptions/Serilog.Enrichers.Span/_packaging?_a=package&feed=8479813c-da6b-4677-b40d-78df8725dc9c&package=3f8a2a7e-8124-4987-9c44-916dba83b9d6&preferRelease=true) [![Serilog.Enrichers.Span NuGet Package Downloads](https://img.shields.io/nuget/dt/Serilog.Enrichers.Span)](https://www.nuget.org/packages/Serilog.Enrichers.Span) [![Twitter URL](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/RehanSaeedUK) [![Twitter Follow](https://img.shields.io/twitter/follow/rehansaeeduk.svg?style=social&label=Follow)](https://twitter.com/RehanSaeedUK)
 
@@ -43,4 +43,4 @@ ILogger logger = new LoggerConfiguration()
 
 ## Contributions and Thanks
 
-Please view the [contributing guide](/.github/CONTRIBUTING.md) for more information.
+Please view the [contributing guide](https://github.com/RehanSaeed/Serilog.Enrichers.Span/blob/main/.github/CONTRIBUTING.md) for more information.
