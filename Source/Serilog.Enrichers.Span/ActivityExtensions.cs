@@ -1,5 +1,6 @@
 namespace Serilog.Enrichers.Span;
 
+using System;
 using System.Diagnostics;
 
 /// <summary>
@@ -14,6 +15,8 @@ internal static class ActivityExtensions
     /// <returns>The span unique identifier.</returns>
     public static string GetSpanId(this Activity activity)
     {
+        ArgumentNullException.ThrowIfNull(activity);
+
         var spanId = activity.IdFormat switch
         {
             ActivityIdFormat.Hierarchical => activity.Id,
@@ -32,6 +35,8 @@ internal static class ActivityExtensions
     /// <returns>The span trace unique identifier.</returns>
     public static string GetTraceId(this Activity activity)
     {
+        ArgumentNullException.ThrowIfNull(activity);
+
         var traceId = activity.IdFormat switch
         {
             ActivityIdFormat.Hierarchical => activity.RootId,
@@ -50,6 +55,8 @@ internal static class ActivityExtensions
     /// <returns>The span parent unique identifier.</returns>
     public static string GetParentId(this Activity activity)
     {
+        ArgumentNullException.ThrowIfNull(activity);
+
         var parentId = activity.IdFormat switch
         {
             ActivityIdFormat.Hierarchical => activity.ParentId,
