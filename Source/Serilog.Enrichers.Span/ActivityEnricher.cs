@@ -26,7 +26,14 @@ public class ActivityEnricher : ILogEventEnricher
     /// <param name="propertyFactory">Factory for creating new properties to add to the event.</param>
     public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
     {
+#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(logEvent);
+#else
+        if (logEvent is null)
+        {
+            throw new ArgumentNullException(nameof(logEvent));
+        }
+#endif
 
         var activity = Activity.Current;
 
