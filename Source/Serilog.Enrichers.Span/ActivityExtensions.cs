@@ -15,7 +15,14 @@ internal static class ActivityExtensions
     /// <returns>The span unique identifier.</returns>
     public static string GetSpanId(this Activity activity)
     {
+#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(activity);
+#else
+        if (activity is null)
+{
+            throw new ArgumentNullException(nameof(activity));
+        }
+#endif
 
         var spanId = activity.IdFormat switch
         {
@@ -35,7 +42,14 @@ internal static class ActivityExtensions
     /// <returns>The span trace unique identifier.</returns>
     public static string GetTraceId(this Activity activity)
     {
+#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(activity);
+#else
+        if (activity is null)
+        {
+            throw new ArgumentNullException(nameof(activity));
+        }
+#endif
 
         var traceId = activity.IdFormat switch
         {
@@ -55,7 +69,14 @@ internal static class ActivityExtensions
     /// <returns>The span parent unique identifier.</returns>
     public static string GetParentId(this Activity activity)
     {
+#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(activity);
+#else
+        if (activity is null)
+        {
+            throw new ArgumentNullException(nameof(activity));
+        }
+#endif
 
         var parentId = activity.IdFormat switch
         {

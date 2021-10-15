@@ -25,8 +25,20 @@ public static class LoggerEnrichmentConfigurationExtensions
     /// <returns>Configuration object allowing method chaining.</returns>
     public static LoggerConfiguration WithSpan(this LoggerEnrichmentConfiguration loggerEnrichmentConfiguration, SpanOptions spanOptions)
     {
+#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(loggerEnrichmentConfiguration);
         ArgumentNullException.ThrowIfNull(spanOptions);
+#else
+        if (loggerEnrichmentConfiguration is null)
+        {
+            throw new ArgumentNullException(nameof(loggerEnrichmentConfiguration));
+        }
+
+        if (spanOptions is null)
+        {
+            throw new ArgumentNullException(nameof(spanOptions));
+        }
+#endif
 
         if (spanOptions.IncludeTags)
         {
