@@ -19,7 +19,7 @@ internal static class ActivityExtensions
         ArgumentNullException.ThrowIfNull(activity);
 #else
         if (activity is null)
-{
+        {
             throw new ArgumentNullException(nameof(activity));
         }
 #endif
