@@ -6,11 +6,11 @@ Enrich Serilog log events with properties from open telemetry spans using .NET's
 
 # What Does It Do?
 
-Enriches logs with a spans unique identifier, parent unique identifier and ASP.NET's trace unique identifier.
+Enriches logs with a spans unique identifier, parent unique identifier and ASP.NET's trace unique identifier. `Serilog.Enrichers.Span` is an add-on to [Serilog](https://serilog.net) to log exception details and custom properties that are not output in `Exception.ToString()`.
 
 # Getting Started
 
-Add the [Serilog.Enrichers.Span](https://www.nuget.org/packages/Serilog.Enrichers.Span/) NuGet package. Serilog.Enrichers.Span is an add-on to [Serilog](https://serilog.net) to log exception details and custom properties that are not output in `Exception.ToString()`.
+Add the [Serilog.Enrichers.Span](https://www.nuget.org/packages/Serilog.Enrichers.Span/) NuGet package.
 
 ```powershell
 dotnet add package Serilog.Enrichers.Span
