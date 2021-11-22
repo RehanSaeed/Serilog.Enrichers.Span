@@ -10,7 +10,7 @@ Enriches logs with a spans unique identifier, parent unique identifier and ASP.N
 
 # Getting Started
 
-Add the [Serilog.Enrichers.Span](https://www.nuget.org/packages/Serilog.Enrichers.Span/) Serilog.Enrichers.Span is an add-on to [Serilog](https://serilog.net) to log exception details and custom properties that are not output in `Exception.ToString()`.
+Add the [Serilog.Enrichers.Span](https://www.nuget.org/packages/Serilog.Enrichers.Span/) NuGet package. Serilog.Enrichers.Span is an add-on to [Serilog](https://serilog.net) to log exception details and custom properties that are not output in `Exception.ToString()`.
 
 ```powershell
 dotnet add package Serilog.Enrichers.Span
