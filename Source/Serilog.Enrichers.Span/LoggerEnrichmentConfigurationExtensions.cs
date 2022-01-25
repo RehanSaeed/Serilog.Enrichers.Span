@@ -45,6 +45,8 @@ public static class LoggerEnrichmentConfigurationExtensions
             loggerEnrichmentConfiguration.With<ActivityTagEnricher>();
         }
 
+        ActivityEnricher.SetupLogEventPropertiesNames(spanOptions.LogEventPropertiesNames);
+
         return loggerEnrichmentConfiguration.With<ActivityEnricher>();
     }
 }
