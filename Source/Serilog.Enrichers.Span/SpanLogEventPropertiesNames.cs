@@ -1,7 +1,7 @@
 namespace Serilog.Enrichers.Span;
 
 /// <summary>
-/// Names for log event properties of span
+/// Names for log event properties of span.
 /// </summary>
 public class SpanLogEventPropertiesNames
 {

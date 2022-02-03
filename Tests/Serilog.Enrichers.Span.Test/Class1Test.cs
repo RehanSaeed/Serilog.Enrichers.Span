@@ -40,27 +40,78 @@ public class Class1Test
         class1.Enrich(@event, Mock.Of<ILogEventPropertyFactory>());
 
         var eventPropertiesNames = @event.Properties.Keys;
-        Assert.Collection(eventPropertiesNames, s => Assert.Equal("SpanId", s), s => Assert.Equal("TraceId", s), s => Assert.Equal("ParentId", s));
+        Assert.Collection(
+            eventPropertiesNames,
+            s => Assert.Equal("SpanId", s),
+            s => Assert.Equal("TraceId", s),
+            s => Assert.Equal("ParentId", s));
     }
 
     [Fact]
     public void Given_config_with_names_When_custom_names_for_event_properties_Then_the_configuration_is_applied()
     {
-        ActivityEnricher.SetupLogEventPropertiesNames(new SpanLogEventPropertiesNames
-        {
-            ParentId = "p",
-            SpanId = "s",
-            TraceId = "t",
-        });
         using var act = Source.StartActivity();
-        var class1 = new ActivityEnricher();
+        var class1 =
+            new ActivityEnricher(new SpanLogEventPropertiesNames { ParentId = "p", SpanId = "s", TraceId = "t" });
 
         var @event = MakeLogEvent();
         class1.Enrich(@event, Mock.Of<ILogEventPropertyFactory>());
 
         var eventPropertiesNames = @event.Properties.Keys;
-        Assert.Collection(eventPropertiesNames, s => Assert.Equal("s", s), s => Assert.Equal("t", s), s => Assert.Equal("p", s));
+        Assert.Collection(
+            eventPropertiesNames,
+            s => Assert.Equal("s", s),
+            s => Assert.Equal("t", s),
+            s => Assert.Equal("p", s));
     }
 
-    private static LogEvent MakeLogEvent() => new(DateTimeOffset.Now, LogEventLevel.Information, null, new MessageTemplate(new List<MessageTemplateToken>()), new List<LogEventProperty>());
+    [Fact]
+    public void Given_config_with_no_configuration_When_null_for_event_properties_Then_argument_exception_occurs()
+    {
+        using var act = Source.StartActivity();
+        var exception = Assert.Throws<ArgumentNullException>(() => new ActivityEnricher(null!));
+        Assert.Equal("logEventPropertyNames", exception.ParamName);
+    }
+
+    [Fact]
+    public void Given_config_with_no_ParentId_name_When_null_name_for_ParentId_event_property_Then_argument_exception_occurs()
+    {
+        using var act = Source.StartActivity();
+        var exception = Assert.Throws<ArgumentException>(() => new ActivityEnricher(new SpanLogEventPropertiesNames
+        {
+            ParentId = null!,
+        }));
+        Assert.Equal($"the property ParentId must not be empty", exception.Message);
+    }
+
+    [Fact]
+    public void Given_config_with_no_ParentId_name_When_null_name_for_TraceId_event_property_Then_argument_exception_occurs()
+    {
+        using var act = Source.StartActivity();
+        var exception = Assert.Throws<ArgumentException>(() => new ActivityEnricher(new SpanLogEventPropertiesNames
+        {
+            TraceId = null!,
+        }));
+        Assert.Equal($"the property TraceId must not be empty", exception.Message);
+    }
+
+    [Fact]
+    public void Given_config_with_no_ParentId_name_When_null_name_for_SpanId_event_property_Then_argument_exception_occurs()
+    {
+        using var act = Source.StartActivity();
+        var exception = Assert.Throws<ArgumentException>(() => new ActivityEnricher(new SpanLogEventPropertiesNames
+        {
+            SpanId = null!,
+        }));
+        Assert.Equal($"the property SpanId must not be empty", exception.Message);
+    }
+
+    private static LogEvent MakeLogEvent() =>
+        new(
+            DateTimeOffset.Now,
+            LogEventLevel.Information,
+            null,
+            new MessageTemplate(
+                new List<MessageTemplateToken>()),
+            new List<LogEventProperty>());
 }
