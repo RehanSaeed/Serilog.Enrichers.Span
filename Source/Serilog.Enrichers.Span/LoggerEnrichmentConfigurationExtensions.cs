@@ -23,7 +23,9 @@ public static class LoggerEnrichmentConfigurationExtensions
     /// <param name="loggerEnrichmentConfiguration">The enrichment configuration.</param>
     /// <param name="spanOptions"><see cref="SpanOptions"/> to use for enriching Activity.</param>
     /// <returns>Configuration object allowing method chaining.</returns>
-    public static LoggerConfiguration WithSpan(this LoggerEnrichmentConfiguration loggerEnrichmentConfiguration, SpanOptions spanOptions)
+    public static LoggerConfiguration WithSpan(
+        this LoggerEnrichmentConfiguration loggerEnrichmentConfiguration,
+        SpanOptions spanOptions)
     {
 #if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(loggerEnrichmentConfiguration);
@@ -45,8 +47,6 @@ public static class LoggerEnrichmentConfigurationExtensions
             loggerEnrichmentConfiguration.With<ActivityTagEnricher>();
         }
 
-        ActivityEnricher.SetupLogEventPropertiesNames(spanOptions.LogEventPropertiesNames);
-
-        return loggerEnrichmentConfiguration.With<ActivityEnricher>();
+        return loggerEnrichmentConfiguration.With(new ActivityEnricher(spanOptions.LogEventPropertiesNames));
     }
 }
