@@ -15,21 +15,21 @@ public class ActivityEnricher : ILogEventEnricher
     private const string TraceIdKey = "Serilog.TraceId";
     private const string ParentIdKey = "Serilog.ParentId";
 #endif
-    private readonly SpanLogEventPropertiesNames propertyNames;
+    private readonly SpanLogEventPropertiesNames propertiesNames;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ActivityEnricher"/> class with default event properties names.
     /// </summary>
-    public ActivityEnricher() => this.propertyNames = new SpanLogEventPropertiesNames();
+    public ActivityEnricher() => this.propertiesNames = new SpanLogEventPropertiesNames();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ActivityEnricher"/> class.
     /// </summary>
-    /// <param name="logEventPropertyNames">Names for log event properties.</param>
-    public ActivityEnricher(SpanLogEventPropertiesNames logEventPropertyNames)
+    /// <param name="logEventPropertiesNames">Names for log event properties.</param>
+    public ActivityEnricher(SpanLogEventPropertiesNames logEventPropertiesNames)
     {
-        CheckPropertiesNamesArgument(logEventPropertyNames);
-        this.propertyNames = logEventPropertyNames;
+        CheckPropertiesNamesArgument(logEventPropertiesNames);
+        this.propertiesNames = logEventPropertiesNames;
     }
 
     /// <summary>
@@ -58,13 +58,13 @@ public class ActivityEnricher : ILogEventEnricher
             this.AddParentId(logEvent, activity);
 #else
             logEvent.AddPropertyIfAbsent(new LogEventProperty(
-                this.propertyNames.SpanId,
+                this.propertiesNames.SpanId,
                 new ScalarValue(activity.GetSpanId())));
             logEvent.AddPropertyIfAbsent(new LogEventProperty(
-                this.propertyNames.TraceId,
+                this.propertiesNames.TraceId,
                 new ScalarValue(activity.GetTraceId())));
             logEvent.AddPropertyIfAbsent(new LogEventProperty(
-                this.propertyNames.ParentId,
+                this.propertiesNames.ParentId,
                 new ScalarValue(activity.GetParentId())));
 #endif
         }
@@ -73,27 +73,15 @@ public class ActivityEnricher : ILogEventEnricher
     private static void CheckPropertiesNamesArgument(SpanLogEventPropertiesNames logEventPropertyNames)
     {
 #if NET6_0_OR_GREATER
+#pragma warning disable IDE0022
         ArgumentNullException.ThrowIfNull(logEventPropertyNames);
+#pragma warning restore IDE0022
 #else
         if (logEventPropertyNames is null)
         {
             throw new ArgumentNullException(nameof(logEventPropertyNames));
         }
 #endif
-        if (string.IsNullOrWhiteSpace(logEventPropertyNames.ParentId))
-        {
-            throw new ArgumentException($"the property {nameof(logEventPropertyNames.ParentId)} must not be empty");
-        }
-
-        if (string.IsNullOrWhiteSpace(logEventPropertyNames.TraceId))
-        {
-            throw new ArgumentException($"the property {nameof(logEventPropertyNames.TraceId)} must not be empty");
-        }
-
-        if (string.IsNullOrWhiteSpace(logEventPropertyNames.SpanId))
-        {
-            throw new ArgumentException($"the property {nameof(logEventPropertyNames.SpanId)} must not be empty");
-        }
     }
 
 #if NET5_0_OR_GREATER
@@ -102,7 +90,7 @@ public class ActivityEnricher : ILogEventEnricher
         var property = activity.GetCustomProperty(SpanIdKey);
         if (property is null || property is not LogEventProperty logEventProperty)
         {
-            logEventProperty = new LogEventProperty(this.propertyNames.SpanId, new ScalarValue(activity.GetSpanId()));
+            logEventProperty = new LogEventProperty(this.propertiesNames.SpanId, new ScalarValue(activity.GetSpanId()));
             activity.SetCustomProperty(SpanIdKey, logEventProperty);
         }
 
@@ -114,7 +102,8 @@ public class ActivityEnricher : ILogEventEnricher
         var property = activity.GetCustomProperty(TraceIdKey);
         if (property is null || property is not LogEventProperty logEventProperty)
         {
-            logEventProperty = new LogEventProperty(this.propertyNames.TraceId, new ScalarValue(activity.GetTraceId()));
+            logEventProperty =
+                new LogEventProperty(this.propertiesNames.TraceId, new ScalarValue(activity.GetTraceId()));
             activity.SetCustomProperty(TraceIdKey, logEventProperty);
         }
 
@@ -127,7 +116,7 @@ public class ActivityEnricher : ILogEventEnricher
         if (property is null || property is not LogEventProperty logEventProperty)
         {
             logEventProperty =
- new LogEventProperty(this.propertyNames.ParentId, new ScalarValue(activity.GetParentId()));
+                new LogEventProperty(this.propertiesNames.ParentId, new ScalarValue(activity.GetParentId()));
             activity.SetCustomProperty(ParentIdKey, logEventProperty);
         }
 
