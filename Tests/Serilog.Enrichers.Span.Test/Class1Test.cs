@@ -77,33 +77,36 @@ public class Class1Test
     public void Given_config_with_no_ParentId_name_When_null_name_for_ParentId_event_property_Then_argument_exception_occurs()
     {
         using var act = Source.StartActivity();
-        var exception = Assert.Throws<ArgumentException>(() => new ActivityEnricher(new SpanLogEventPropertiesNames
+        var exception = Assert.Throws<ArgumentException>(() => new SpanLogEventPropertiesNames
         {
             ParentId = null!,
-        }));
-        Assert.Equal($"the property ParentId must not be empty", exception.Message);
+        });
+        Assert.Equal($"The property must not be empty (Parameter '{nameof(SpanLogEventPropertiesNames.ParentId)}')", exception.Message);
+        Assert.Equal(nameof(SpanLogEventPropertiesNames.ParentId), exception.ParamName);
     }
 
     [Fact]
     public void Given_config_with_no_ParentId_name_When_null_name_for_TraceId_event_property_Then_argument_exception_occurs()
     {
         using var act = Source.StartActivity();
-        var exception = Assert.Throws<ArgumentException>(() => new ActivityEnricher(new SpanLogEventPropertiesNames
+        var exception = Assert.Throws<ArgumentException>(() => new SpanLogEventPropertiesNames
         {
             TraceId = null!,
-        }));
-        Assert.Equal($"the property TraceId must not be empty", exception.Message);
+        });
+        Assert.Equal($"The property must not be empty (Parameter '{nameof(SpanLogEventPropertiesNames.TraceId)}')", exception.Message);
+        Assert.Equal(nameof(SpanLogEventPropertiesNames.TraceId), exception.ParamName);
     }
 
     [Fact]
     public void Given_config_with_no_ParentId_name_When_null_name_for_SpanId_event_property_Then_argument_exception_occurs()
     {
         using var act = Source.StartActivity();
-        var exception = Assert.Throws<ArgumentException>(() => new ActivityEnricher(new SpanLogEventPropertiesNames
+        var exception = Assert.Throws<ArgumentException>(() => new SpanLogEventPropertiesNames
         {
             SpanId = null!,
-        }));
-        Assert.Equal($"the property SpanId must not be empty", exception.Message);
+        });
+        Assert.Equal($"The property must not be empty (Parameter '{nameof(SpanLogEventPropertiesNames.SpanId)}')", exception.Message);
+        Assert.Equal(nameof(SpanLogEventPropertiesNames.SpanId), exception.ParamName);
     }
 
     private static LogEvent MakeLogEvent() =>
