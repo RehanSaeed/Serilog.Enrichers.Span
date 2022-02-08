@@ -86,7 +86,7 @@ public class Class1Test
     }
 
     [Fact]
-    public void Given_config_with_no_ParentId_name_When_null_name_for_TraceId_event_property_Then_argument_exception_occurs()
+    public void Given_config_with_no_TraceId_name_When_null_name_for_TraceId_event_property_Then_argument_exception_occurs()
     {
         using var act = Source.StartActivity();
         var exception = Assert.Throws<ArgumentException>(() => new SpanLogEventPropertiesNames
@@ -98,7 +98,7 @@ public class Class1Test
     }
 
     [Fact]
-    public void Given_config_with_no_ParentId_name_When_null_name_for_SpanId_event_property_Then_argument_exception_occurs()
+    public void Given_config_with_no_SpanId_name_When_null_name_for_SpanId_event_property_Then_argument_exception_occurs()
     {
         using var act = Source.StartActivity();
         var exception = Assert.Throws<ArgumentException>(() => new SpanLogEventPropertiesNames
