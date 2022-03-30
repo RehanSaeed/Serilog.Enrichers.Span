@@ -33,7 +33,10 @@ public class ActivityTagEnricher : ILogEventEnricher
         if (activity is not null)
         {
             var tags = activity.Tags.Select(tag => new LogEventProperty(tag.Key, new ScalarValue(tag.Value)));
-            logEvent.AddPropertyIfAbsent(new LogEventProperty(ActivityTags, new StructureValue(tags)));
+            if (tags.Any())
+            {
+                logEvent.AddPropertyIfAbsent(new LogEventProperty(ActivityTags, new StructureValue(tags)));
+            }
         }
     }
 }
