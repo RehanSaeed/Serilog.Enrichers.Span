@@ -47,6 +47,11 @@ public static class LoggerEnrichmentConfigurationExtensions
             loggerEnrichmentConfiguration.With<ActivityTagEnricher>();
         }
 
+        if (spanOptions.IncludeBaggage)
+        {
+            loggerEnrichmentConfiguration.With<ActivityBaggageEnricher>();
+        }
+
         return loggerEnrichmentConfiguration.With(new ActivityEnricher(spanOptions.LogEventPropertiesNames));
     }
 }
