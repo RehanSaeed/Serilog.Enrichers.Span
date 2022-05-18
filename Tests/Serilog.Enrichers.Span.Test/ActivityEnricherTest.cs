@@ -3,14 +3,14 @@ namespace Serilog.Enrichers.Span.Test;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Serilog.Core;
-using Serilog.Events;
 using Moq;
-using Serilog.Parsing;
+using Serilog.Core;
 using Serilog.Enrichers.Span;
+using Serilog.Events;
+using Serilog.Parsing;
 using Xunit;
 
-public class Class1Test
+public class ActivityEnricherTest
 {
     private static readonly ActivitySource Source = new("Sample.DistributedTracing", "1.0.0");
 
@@ -20,19 +20,10 @@ public class Class1Test
         Sample = (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllData,
     };
 
-    public Class1Test() => ActivitySource.AddActivityListener(Listener);
+    public ActivityEnricherTest() => ActivitySource.AddActivityListener(Listener);
 
     [Fact]
-    public void Given_When_Then()
-    {
-        var class1 = new ActivityEnricher();
-
-        Assert.NotNull(class1);
-    }
-
-    [Fact]
-    public void
-        Given_no_configuration_When_no_custom_names_for_event_properties_Then_the_default_configuration_is_applied()
+    public void Given_no_configuration_When_no_custom_names_for_event_properties_Then_the_default_configuration_is_applied()
     {
         using var act = Source.StartActivity();
         var class1 = new ActivityEnricher();
