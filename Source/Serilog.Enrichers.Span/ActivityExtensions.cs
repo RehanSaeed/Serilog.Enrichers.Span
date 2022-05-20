@@ -6,7 +6,7 @@ using System.Diagnostics;
 /// <summary>
 /// <see cref="Activity"/> extension methods.
 /// </summary>
-internal static class ActivityExtensions
+public static class ActivityExtensions
 {
     /// <summary>
     /// Gets the span unique identifier regardless of the activity identifier format.
