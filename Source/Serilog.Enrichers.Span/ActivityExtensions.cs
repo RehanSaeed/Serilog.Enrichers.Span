@@ -6,6 +6,7 @@ using System.Diagnostics;
 /// <summary>
 /// <see cref="Activity"/> extension methods.
 /// </summary>
+#pragma warning disable CS3001 // Argument type is not CLS-compliant
 public static class ActivityExtensions
 {
     /// <summary>
@@ -89,3 +90,4 @@ public static class ActivityExtensions
         return parentId ?? string.Empty;
     }
 }
+#pragma warning restore CS3001 // Argument type is not CLS-compliant
