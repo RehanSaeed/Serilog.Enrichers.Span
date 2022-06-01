@@ -27,7 +27,7 @@ public class ActivityTraceStateEnricher : ILogEventEnricher
         }
 #endif
 
-        if (!string.IsNullOrWhiteSpace(Activity.Current?.TraceStateString))
+        if (Activity.Current is not null && !string.IsNullOrWhiteSpace(Activity.Current.TraceStateString))
         {
             var state = Activity.Current.TraceStateString?
                 .Split(',')
