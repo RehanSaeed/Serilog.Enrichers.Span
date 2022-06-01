@@ -23,11 +23,41 @@ using Serilog;
 using Serilog.Enrichers.Span;
 
 ILogger logger = new LoggerConfiguration()
-    .Enrich.WithSpan()
+    .Enrich.WithSpan(new SpanOptions { IncludeTags = false, IncludeBaggage = false, IncludeTraceState = false })
     .WriteTo.RollingFile(
         new JsonFormatter(renderMessage: true), 
         @"C:\logs\log-{Date}.txt")    
     .CreateLogger();
+```
+
+Or alternatively configure in `appsettings.json` like so:
+
+```json
+{
+    "Serilog": {
+        "Enrich": [{
+            "Name": "WithSpan",
+            "Args": {
+                "SpanOptions": {
+                    "IncludeTags": true,
+                    "IncludeBaggage": true,
+                    "IncludeTraceState": true
+                }
+            }
+        }],
+        "WriteTo:Async": {
+            "Name": "Async",
+            "Args": {
+                "Configure": [{
+                    "Name": "Console",
+                    "Args": {
+                        "outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {TraceId} {SpanId} {ParentId} {Baggage} {TraceState} {Attributes} {Message:lj}{NewLine}{Exception}"
+                    }
+                }]
+            }
+        }
+    }
+}
 ```
 
 ## Continuous Integration

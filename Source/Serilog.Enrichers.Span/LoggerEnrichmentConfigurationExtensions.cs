@@ -52,6 +52,11 @@ public static class LoggerEnrichmentConfigurationExtensions
             loggerEnrichmentConfiguration.With<ActivityBaggageEnricher>();
         }
 
+        if (spanOptions.IncludeTraceState)
+        {
+            loggerEnrichmentConfiguration.With<ActivityTraceStateEnricher>();
+        }
+
         return loggerEnrichmentConfiguration.With(new ActivityEnricher(spanOptions.LogEventPropertiesNames));
     }
 }
