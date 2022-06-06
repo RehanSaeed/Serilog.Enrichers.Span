@@ -60,7 +60,7 @@ Or alternatively configure in `appsettings.json` like so:
                     "Args": {
                         "Formatter": {
                             "Type": "Serilog.Templates.ExpressionTemplate, Serilog.Expressions",
-                            "Template": "[{@t:HH:mm:ss} {@l:w4} {SourceContext} {TraceId} {SpanId} {ParentId} {Baggage} {Baggage.SubProperty} {TraceState} {TraceState.SubProperty} {Attributes} {Attributes.SubPropert}] {@m}\n{@x}",
+                            "Template": "[{@t:HH:mm:ss} {@l:w4} {SourceContext} {TraceId} {SpanId} {ParentId} {Baggage} {Baggage.SubProperty} {TraceState} {TraceState.SubProperty} {Attributes} {Attributes.SubProperty}] {@m}\n{@x}",
                             "Theme": "Serilog.Templates.Themes.TemplateTheme::Code, Serilog.Expressions"
                         }
                     }
