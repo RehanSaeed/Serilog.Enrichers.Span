@@ -23,10 +23,17 @@ using Serilog;
 using Serilog.Enrichers.Span;
 
 ILogger logger = new LoggerConfiguration()
-    .Enrich.WithSpan(new SpanOptions { IncludeTags = false, IncludeBaggage = false, IncludeTraceState = false })
+    .Enrich.WithSpan(
+        new SpanOptions {
+            IncludeTags = true, // aka Attributes
+            IncludeBaggage = true,
+            IncludeTraceState = true })
+    .WriteTo.Console(
+        new ExpressionTemplate("[{@t:HH:mm:ss} {@l:w4} {SourceContext} {TraceId} {SpanId} {ParentId} {Baggage} {Baggage.SubProperty} {TraceState} {TraceState.SubProperty} {Attributes}] {@m}\n{@x}",
+        theme: TemplateTheme.Code))
     .WriteTo.RollingFile(
-        new JsonFormatter(renderMessage: true), 
-        @"C:\logs\log-{Date}.txt")    
+        new JsonFormatter(renderMessage: true),
+        @"C:\logs\log-{Date}.txt")
     .CreateLogger();
 ```
 
@@ -51,7 +58,20 @@ Or alternatively configure in `appsettings.json` like so:
                 "Configure": [{
                     "Name": "Console",
                     "Args": {
-                        "outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {TraceId} {SpanId} {ParentId} {Baggage} {TraceState} {Attributes} {Message:lj}{NewLine}{Exception}"
+                        "Formatter": {
+                            "Type": "Serilog.Templates.ExpressionTemplate, Serilog.Expressions",
+                            "Template": "[{@t:HH:mm:ss} {@l:w4} {SourceContext} {TraceId} {SpanId} {ParentId} {Baggage} {Baggage.SubProperty} {TraceState} {TraceState.SubProperty} {Attributes}] {@m}\n{@x}",
+                            "Theme": "Serilog.Templates.Themes.TemplateTheme::Code, Serilog.Expressions"
+                        }
+                    }
+                }, {
+                    "Name": "RollingFile",
+                    "Args": {
+                        "Formatter": {
+                            "Type": "Serilog.Formatting.Json.JsonFormatter, Serilog",
+                            "RenderMessage": true
+                        },
+                        "PathFormat": "C:\\logs\\log-{Date}.txt"
                     }
                 }]
             }
@@ -59,6 +79,8 @@ Or alternatively configure in `appsettings.json` like so:
     }
 }
 ```
+
+Note support for instantiating formatter with arguments was introduced in Serilog.Settings.Configuration 3.3.0, and support for passing theme parameter in 3.3.1. Note need to add `"Serilog:Using": ["Assembly"]` section if config uses functionlity that lives in an assembly that does not contain "serilog" in name.
 
 ## Continuous Integration
 
