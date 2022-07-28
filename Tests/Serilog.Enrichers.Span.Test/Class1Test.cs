@@ -3,11 +3,11 @@ namespace Serilog.Enrichers.Span.Test;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Serilog.Core;
-using Serilog.Events;
 using Moq;
-using Serilog.Parsing;
+using Serilog.Core;
 using Serilog.Enrichers.Span;
+using Serilog.Events;
+using Serilog.Parsing;
 using Xunit;
 
 public class Class1Test
