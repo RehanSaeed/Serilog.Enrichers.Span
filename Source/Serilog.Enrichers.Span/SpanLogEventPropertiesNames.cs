@@ -10,6 +10,7 @@ public class SpanLogEventPropertiesNames
     private string parentId = "ParentId";
     private string traceId = "TraceId";
     private string spanId = "SpanId";
+    private string operationName = "OperationName";
 
     /// <summary>
     /// Gets or sets a name for trace id property.
@@ -59,6 +60,23 @@ public class SpanLogEventPropertiesNames
             }
 
             this.spanId = value;
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets a name for operation name property.
+    /// </summary>
+    public string OperationName
+    {
+        get => this.operationName;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new ArgumentException("The property must not be empty", nameof(this.OperationName));
+            }
+
+            this.operationName = value;
         }
     }
 }
