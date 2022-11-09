@@ -24,7 +24,7 @@
   </PropertyGroup>
 
   <ItemGroup Label="Package References">
-    <GlobalPackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.3.48" />
+    <GlobalPackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.4.27" />
     <GlobalPackageReference Include="MinVer" Version="4.2.0" />
     <GlobalPackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435" />
   </ItemGroup>
