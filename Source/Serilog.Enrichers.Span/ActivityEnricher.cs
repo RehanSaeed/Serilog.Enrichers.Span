@@ -1,6 +1,7 @@
 namespace Serilog.Enrichers.Span;
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Serilog.Core;
 using Serilog.Events;
@@ -16,20 +17,28 @@ public class ActivityEnricher : ILogEventEnricher
     private const string ParentIdKey = "Serilog.ParentId";
 #endif
     private readonly SpanLogEventPropertiesNames propertiesNames;
+    private readonly ISpanLogEventPropertyAugmentor? logEventPropertyAugmentor;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ActivityEnricher"/> class with default event properties names.
     /// </summary>
-    public ActivityEnricher() => this.propertiesNames = new SpanLogEventPropertiesNames();
+    /// <param name="logEventPropertyAugmentor">Augmentor to apply to trace values added to the log event.</param>
+    public ActivityEnricher(ISpanLogEventPropertyAugmentor? logEventPropertyAugmentor = null)
+    {
+        this.propertiesNames = new SpanLogEventPropertiesNames();
+        this.logEventPropertyAugmentor = logEventPropertyAugmentor;
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ActivityEnricher"/> class.
     /// </summary>
     /// <param name="logEventPropertiesNames">Names for log event properties.</param>
-    public ActivityEnricher(SpanLogEventPropertiesNames logEventPropertiesNames)
+    /// <param name="logEventPropertyAugmentor">Augmentor to apply to trace values added to the log event.</param>
+    public ActivityEnricher(SpanLogEventPropertiesNames logEventPropertiesNames, ISpanLogEventPropertyAugmentor? logEventPropertyAugmentor = null)
     {
         CheckPropertiesNamesArgument(logEventPropertiesNames);
         this.propertiesNames = logEventPropertiesNames;
+        this.logEventPropertyAugmentor = logEventPropertyAugmentor;
     }
 
     /// <summary>
@@ -57,15 +66,35 @@ public class ActivityEnricher : ILogEventEnricher
             this.AddTraceId(logEvent, activity);
             this.AddParentId(logEvent, activity);
 #else
+            var spanId = activity.GetSpanId();
+            foreach (var additionalProperty in this.AugmentSpanId(activity))
+            {
+                logEvent.AddPropertyIfAbsent(additionalProperty);
+            }
+
             logEvent.AddPropertyIfAbsent(new LogEventProperty(
                 this.propertiesNames.SpanId,
-                new ScalarValue(activity.GetSpanId())));
+                new ScalarValue(spanId)));
+
+            var traceId = activity.GetTraceId();
+            foreach (var additionalProperty in this.AugmentTraceId(activity))
+            {
+                logEvent.AddPropertyIfAbsent(additionalProperty);
+            }
+
             logEvent.AddPropertyIfAbsent(new LogEventProperty(
                 this.propertiesNames.TraceId,
-                new ScalarValue(activity.GetTraceId())));
+                new ScalarValue(traceId)));
+
+            var parentId = activity.GetParentId();
+            foreach (var additionalProperty in this.AugmentParentId(activity))
+            {
+                logEvent.AddPropertyIfAbsent(additionalProperty);
+            }
+
             logEvent.AddPropertyIfAbsent(new LogEventProperty(
                 this.propertiesNames.ParentId,
-                new ScalarValue(activity.GetParentId())));
+                new ScalarValue(parentId)));
 #endif
         }
     }
@@ -94,6 +123,11 @@ public class ActivityEnricher : ILogEventEnricher
             activity.SetCustomProperty(SpanIdKey, logEventProperty);
         }
 
+        foreach (var additionalProperty in this.AugmentSpanId(activity))
+        {
+            logEvent.AddPropertyIfAbsent(additionalProperty);
+        }
+
         logEvent.AddPropertyIfAbsent(logEventProperty);
     }
 
@@ -105,6 +139,11 @@ public class ActivityEnricher : ILogEventEnricher
             logEventProperty =
                 new LogEventProperty(this.propertiesNames.TraceId, new ScalarValue(activity.GetTraceId()));
             activity.SetCustomProperty(TraceIdKey, logEventProperty);
+        }
+
+        foreach (var additionalProperty in this.AugmentTraceId(activity))
+        {
+            logEvent.AddPropertyIfAbsent(additionalProperty);
         }
 
         logEvent.AddPropertyIfAbsent(logEventProperty);
@@ -120,7 +159,48 @@ public class ActivityEnricher : ILogEventEnricher
             activity.SetCustomProperty(ParentIdKey, logEventProperty);
         }
 
+        foreach (var additionalProperty in this.AugmentParentId(activity))
+        {
+            logEvent.AddPropertyIfAbsent(additionalProperty);
+        }
+
         logEvent.AddPropertyIfAbsent(logEventProperty);
     }
 #endif
+
+    private IEnumerable<LogEventProperty> AugmentSpanId(Activity activity)
+    {
+        var spanId = activity.GetSpanId();
+
+        if (this.logEventPropertyAugmentor == null)
+        {
+            return Array.Empty<LogEventProperty>();
+        }
+
+        return this.logEventPropertyAugmentor.AugmentSpanId(spanId);
+    }
+
+    private IEnumerable<LogEventProperty> AugmentTraceId(Activity activity)
+    {
+        var traceId = activity.GetTraceId();
+
+        if (this.logEventPropertyAugmentor == null)
+        {
+            return Array.Empty<LogEventProperty>();
+        }
+
+        return this.logEventPropertyAugmentor.AugmentTraceId(traceId);
+    }
+
+    private IEnumerable<LogEventProperty> AugmentParentId(Activity activity)
+    {
+        var parentId = activity.GetParentId();
+
+        if (this.logEventPropertyAugmentor == null)
+        {
+            return Array.Empty<LogEventProperty>();
+        }
+
+        return this.logEventPropertyAugmentor.AugmentParentId(parentId);
+    }
 }
