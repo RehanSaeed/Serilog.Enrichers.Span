@@ -21,6 +21,11 @@ public class SpanOptions
     public bool IncludeTraceState { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether to include operation name in log or not. Default is false.
+    /// </summary>
+    public bool IncludeOperationName { get; set; }
+
+    /// <summary>
     /// Gets or sets log properties names for span.
     /// </summary>
     public SpanLogEventPropertiesNames LogEventPropertiesNames { get; set; } = new();

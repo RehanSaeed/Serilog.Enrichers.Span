@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup Label="Build">
-    <TargetFrameworks>net6.0;net5.0;netcoreapp3.1;net472;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net7.0;net6.0;net472;netstandard2.0</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Label="Package">
@@ -11,8 +11,8 @@
   </PropertyGroup>
 
   <ItemGroup Label="Package References">
-    <PackageReference Include="Serilog" Version="2.8.0" />
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="6.0.0" />
+    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="7.0.0" />
   </ItemGroup>
 
 </Project>
