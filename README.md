@@ -23,64 +23,27 @@ using Serilog;
 using Serilog.Enrichers.Span;
 
 ILogger logger = new LoggerConfiguration()
-    .Enrich.WithSpan(
-        new SpanOptions {
-            IncludeTags = true, // aka Attributes
-            IncludeBaggage = true,
-            IncludeTraceState = true })
-    .WriteTo.Console(
-        new ExpressionTemplate("[{@t:HH:mm:ss} {@l:w4} {SourceContext} {TraceId} {SpanId} {ParentId} {Baggage} {Baggage.SubProperty} {TraceState} {TraceState.SubProperty} {Attributes} {Attributes.SubProperty}] {@m}\n{@x}",
-        theme: TemplateTheme.Code))
+    .Enrich.WithSpan()
     .WriteTo.RollingFile(
-        new JsonFormatter(renderMessage: true),
-        @"C:\logs\log-{Date}.txt")
+        new JsonFormatter(renderMessage: true), 
+        @"C:\logs\log-{Date}.txt")    
     .CreateLogger();
 ```
 
-Or alternatively configure in `appsettings.json` like so:
+## Options
 
-```json
-{
-    "Serilog": {
-        "Enrich": [{
-            "Name": "WithSpan",
-            "Args": {
-                "SpanOptions": {
-                    "IncludeTags": true,
-                    "IncludeBaggage": true,
-                    "IncludeTraceState": true
-                }
-            }
-        }],
-        "WriteTo:Async": {
-            "Name": "Async",
-            "Args": {
-                "Configure": [{
-                    "Name": "Console",
-                    "Args": {
-                        "Formatter": {
-                            "Type": "Serilog.Templates.ExpressionTemplate, Serilog.Expressions",
-                            "Template": "[{@t:HH:mm:ss} {@l:w4} {SourceContext} {TraceId} {SpanId} {ParentId} {Baggage} {Baggage.SubProperty} {TraceState} {TraceState.SubProperty} {Attributes} {Attributes.SubProperty}] {@m}\n{@x}",
-                            "Theme": "Serilog.Templates.Themes.TemplateTheme::Code, Serilog.Expressions"
-                        }
-                    }
-                }, {
-                    "Name": "RollingFile",
-                    "Args": {
-                        "Formatter": {
-                            "Type": "Serilog.Formatting.Json.JsonFormatter, Serilog",
-                            "RenderMessage": true
-                        },
-                        "PathFormat": "C:\\logs\\log-{Date}.txt"
-                    }
-                }]
-            }
-        }
-    }
-}
+```cs
+    .Enrich.WithSpan(new SpanOptions {
+        IncludeTags = true,
+        IncludeBaggage = true,
+        IncludeTraceState = true })
 ```
 
-Note support for instantiating formatter with arguments was introduced in Serilog.Settings.Configuration 3.3.0, and support for passing theme parameter in 3.3.1. Note need to add `"Serilog:Using": ["Assembly"]` section if config uses functionlity that lives in an assembly that does not contain "serilog" in name.
+| Option | Description |
+| --- | --- |
+| IncludeTags | Include Activity.Tags as Attributes in log entry if true. Default false. |
+| IncludeBaggage | Include Activity.Baggage in log entry if true. Default false. |
+| IncludeTraceState | Include Activity.TraceState in log entry if true. Default false. |
 
 ## Continuous Integration
 

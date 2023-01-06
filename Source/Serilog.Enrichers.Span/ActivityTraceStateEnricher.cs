@@ -32,8 +32,13 @@ public class ActivityTraceStateEnricher : ILogEventEnricher
             var state = Activity.Current.TraceStateString?
                 .Split(',')
                 .Select(p => p.Split('='))
-                .Select(p => new LogEventProperty(p.FirstOrDefault(), new ScalarValue(p.Skip(1).FirstOrDefault())));
-            logEvent.AddPropertyIfAbsent(new LogEventProperty("TraceState", new StructureValue(state)));
+                .Where(p => !string.IsNullOrWhiteSpace(p[0]))
+                .Select(p => new LogEventProperty(p[0].Trim(), new ScalarValue(p.ElementAtOrDefault(1)?.Trim())))
+                .ToArray();
+            if (state?.Length > 0)
+            {
+                logEvent.AddPropertyIfAbsent(new LogEventProperty("TraceState", new StructureValue(state)));
+            }
         }
     }
 }
