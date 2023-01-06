@@ -32,11 +32,32 @@ ILogger logger = new LoggerConfiguration()
 
 ## Options
 
+Program.cs
+
 ```cs
     .Enrich.WithSpan(new SpanOptions {
         IncludeTags = true,
         IncludeBaggage = true,
         IncludeTraceState = true })
+```
+
+appsettings.json (requires Serilog.Settings.Configuration)
+
+```json
+{
+    "Serilog": {
+        "Enrich": [{
+            "Name": "WithSpan",
+            "Args": {
+                "SpanOptions": {
+                    "IncludeTags": true,
+                    "IncludeBaggage": true,
+                    "IncludeTraceState": true
+                }
+            }
+        }]
+    }
+}
 ```
 
 | Option | Description |
