@@ -38,7 +38,8 @@ Program.cs
     .Enrich.WithSpan(new SpanOptions {
         IncludeTags = true,
         IncludeBaggage = true,
-        IncludeTraceState = true })
+        IncludeTraceState = true,
+        IncludeOperationName = true })
 ```
 
 appsettings.json (requires Serilog.Settings.Configuration)
@@ -52,7 +53,8 @@ appsettings.json (requires Serilog.Settings.Configuration)
                 "SpanOptions": {
                     "IncludeTags": true,
                     "IncludeBaggage": true,
-                    "IncludeTraceState": true
+                    "IncludeTraceState": true,
+                    "IncludeOperationName": true
                 }
             }
         }]
@@ -62,9 +64,10 @@ appsettings.json (requires Serilog.Settings.Configuration)
 
 | Option | Description |
 | --- | --- |
-| IncludeTags | Include Activity.Tags as Attributes in log entry if true. Default false. |
+| IncludeTags | Include Activity.Tags as name `Attributes` in log entry if true. Default false. |
 | IncludeBaggage | Include Activity.Baggage in log entry if true. Default false. |
 | IncludeTraceState | Include Activity.TraceState in log entry if true. Default false. |
+| IncludeOperationName | Include Activity.OperationName as name equal to value in log entry if true. Default false.  |
 
 ## Continuous Integration
 
