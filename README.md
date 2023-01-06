@@ -64,10 +64,10 @@ appsettings.json (requires Serilog.Settings.Configuration)
 
 | Option | Description |
 | --- | --- |
-| IncludeTags | Include Activity.Tags as name `Attributes` in log entry if true. Default false. |
-| IncludeBaggage | Include Activity.Baggage in log entry if true. Default false. |
-| IncludeTraceState | Include Activity.TraceState in log entry if true. Default false. |
-| IncludeOperationName | Include Activity.OperationName as name equal to value in log entry if true. Default false.  |
+| IncludeTags | Include [Activity.Tags](https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.activity.tags) as name `Attributes` when enriching log entry if true. Default false. |
+| IncludeBaggage | Include [Activity.Baggage](https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.activity.baggage) as name `Baggage` when enriching log entry if true. Default false. |
+| IncludeTraceState | Include [Activity.TraceStateString](https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.activity.tracestatestring) as name `TraceState` when enriching log entry if true. Default false. |
+| IncludeOperationName | Include [Activity.OperationName](https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.activity.operationname) as name equal to value when enriching log entry if true. Default false.  |
 
 ## Continuous Integration
 
