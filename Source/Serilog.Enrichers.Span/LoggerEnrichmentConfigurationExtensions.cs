@@ -56,7 +56,7 @@ public static class LoggerEnrichmentConfigurationExtensions
         {
             loggerEnrichmentConfiguration.With<ActivityTraceStateEnricher>();
         }
-        
+
         if (spanOptions.IncludeTraceFlags)
         {
             loggerEnrichmentConfiguration.With<ActivityTraceFlagsEnricher>();
