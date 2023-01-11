@@ -16,11 +16,6 @@ public class SpanOptions
     public bool IncludeBaggage { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether to include trace state in log or not. Default is false.
-    /// </summary>
-    public bool IncludeTraceState { get; set; }
-
-    /// <summary>
     /// Gets or sets a value indicating whether to include operation name in log or not. Default is false.
     /// </summary>
     public bool IncludeOperationName { get; set; }
@@ -29,6 +24,11 @@ public class SpanOptions
     /// Gets or sets a value indicating whether to include activity trace flags in log or not. Default is false.
     /// </summary>
     public bool IncludeTraceFlags { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to include trace state in log or not. Default is false.
+    /// </summary>
+    public bool IncludeTraceState { get; set; }
 
     /// <summary>
     /// Gets or sets log properties names for span.
