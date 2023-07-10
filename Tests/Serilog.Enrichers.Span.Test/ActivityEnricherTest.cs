@@ -100,6 +100,34 @@ public class ActivityEnricherTest
         Assert.Equal(nameof(SpanLogEventPropertiesNames.SpanId), exception.ParamName);
     }
 
+    [Fact]
+    public void When_multiple_ActivityEnrichers_with_different_property_names_Then_the_different_configuration_are_applied()
+    {
+        using var act = Source.StartActivity();
+        var event1 = MakeLogEvent();
+        var event2 = MakeLogEvent();
+        var propertyNames1 = new SpanLogEventPropertiesNames();
+        var propertyNames2 = new SpanLogEventPropertiesNames { ParentId = "p", SpanId = "s", TraceId = "t" };
+        var class1 = new ActivityEnricher(propertyNames1);
+        var class2 = new ActivityEnricher(propertyNames2);
+
+        class1.Enrich(event1, Mock.Of<ILogEventPropertyFactory>());
+        class2.Enrich(event2, Mock.Of<ILogEventPropertyFactory>());
+
+        var eventPropertiesNames1 = event1.Properties.Keys;
+        Assert.Collection(
+            eventPropertiesNames1,
+            s => Assert.Equal(propertyNames1.SpanId, s),
+            s => Assert.Equal(propertyNames1.TraceId, s),
+            s => Assert.Equal(propertyNames1.ParentId, s));
+        var eventPropertiesNames2 = event2.Properties.Keys;
+        Assert.Collection(
+            eventPropertiesNames2,
+            s => Assert.Equal(propertyNames2.SpanId, s),
+            s => Assert.Equal(propertyNames2.TraceId, s),
+            s => Assert.Equal(propertyNames2.ParentId, s));
+    }
+
     private static LogEvent MakeLogEvent() =>
         new(
             DateTimeOffset.Now,
