@@ -6,7 +6,7 @@ Enrich Serilog log events with properties from open telemetry spans using .NET's
 
 # :exclamation: Important
 
-This repository is now deprecated. Serilog now has the native ability to log span related data. See https://github.com/serilog/serilog/pull/1955.
+This repository is now deprecated. Serilog now has the native ability to log span related data. See [#332](https://github.com/RehanSaeed/Serilog.Enrichers.Span/issues/332).
 
 # What Does It Do?
 
