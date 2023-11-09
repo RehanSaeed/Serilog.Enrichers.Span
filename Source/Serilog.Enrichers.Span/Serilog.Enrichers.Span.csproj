@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup Label="Package References">
-    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="Serilog" Version="3.1.0" />
     <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="7.0.0" />
   </ItemGroup>
 
